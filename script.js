@@ -1,83 +1,47 @@
-const words = [
-  { en: "improve", ja: "改善する" },
-  { en: "reduce", ja: "減らす" },
-  { en: "increase", ja: "増やす" },
-  { en: "maintain", ja: "維持する" },
-  { en: "decide", ja: "決める" },
-  { en: "provide", ja: "提供する" }
-];
-
-let score = 0;
-let lives = 5;
-let combo = 0;
-let questionCount = 0;
-let currentAnswer = "";
-
-const questionEl = document.getElementById("question");
-const choicesEl = document.getElementById("choices");
-const scoreEl = document.getElementById("score");
-const livesEl = document.getElementById("lives");
-const comboEl = document.getElementById("combo");
-const progressEl = document.getElementById("progress");
-
-nextQuestion();
-
-function nextQuestion() {
-  if (lives <= 0 || questionCount >= 20) return endGame();
-
-  questionCount++;
-
-  const correct = words[Math.floor(Math.random() * words.length)];
-  currentAnswer = correct.ja;
-
-  let choices = [correct.ja];
-
-  while (choices.length < 4) {
-    const rand = words[Math.floor(Math.random() * words.length)].ja;
-    if (!choices.includes(rand)) choices.push(rand);
-  }
-
-  choices.sort(() => Math.random() - 0.5);
-
-  questionEl.textContent = correct.en;
-  choicesEl.innerHTML = "";
-
-  choices.forEach(c => {
-    const btn = document.createElement("div");
-    btn.className = "choice";
-    btn.textContent = c;
-
-    btn.onclick = () => {
-      if (c === currentAnswer) {
-        btn.classList.add("correct");
-        combo++;
-        score += 10 * combo;
-      } else {
-        btn.classList.add("wrong");
-        lives--;
-        combo = 0;
-      }
-
-      update();
-      setTimeout(nextQuestion, 600);
-    };
-
-    choicesEl.appendChild(btn);
-  });
-
-  update();
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #f5f5f5;
+  margin: 0;
 }
 
-function update() {
-  scoreEl.textContent = "Score: " + score;
-  comboEl.textContent = "Combo: " + combo;
-  progressEl.textContent = questionCount + " / 20";
-  livesEl.textContent = "❤️".repeat(lives);
+#game {
+  margin-top: 40px;
 }
 
-function endGame() {
-  document.getElementById("game").style.display = "none";
-  document.getElementById("result").style.display = "block";
+#status span {
+  margin: 0 10px;
+  font-weight: bold;
+}
 
-  document.getElementById("finalScore").textContent = "Score: " + score;
+#question {
+  font-size: 28px;
+  margin: 30px;
+}
+
+#choices {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.choice {
+  width: 200px;
+  margin: 8px;
+  padding: 10px;
+  background: white;
+  border: 2px solid #333;
+  cursor: pointer;
+}
+
+.choice:hover {
+  background: #ddd;
+}
+
+.correct {
+  background: #8f8 !important;
+}
+
+.wrong {
+  background: #f88 !important;
 }
